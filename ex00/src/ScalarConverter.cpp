@@ -79,7 +79,11 @@ void ScalarConverter::displayChar(char toDisplay) {
 
 void ScalarConverter::intConvert(std::string toConvert) {
     try {
-        int intValue = std::stoi(toConvert);
+        int intValue = 0;
+        std::stringstream test;
+        test << toConvert;
+        test >> intValue;
+        std::cout << "test "<< intValue << std::endl;
         if (intValue < 32 || intValue > 126) {
             std::cout << "char: Non displayable" << std::endl;
         } else {

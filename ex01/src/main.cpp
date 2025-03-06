@@ -6,8 +6,8 @@ int main() {
     test.user_id = 4124;
 
     std::cout << "here\n";
-    printf("%p\n", &test);
-    uintptr_t truc = Serializer::serialize(&test);
+    // printf("%p\n", &test);
+    __intptr_t truc = Serializer::serialize(&test);
     std::cout << truc << std::endl;
     std::cout << Serializer::deserialize(truc) << std::endl;
     

@@ -2,6 +2,7 @@
 #include <cctype>
 #include <iomanip>
 #include <sstream>
+#include <stdlib.h>
 
 class ScalarConverter {
     private:

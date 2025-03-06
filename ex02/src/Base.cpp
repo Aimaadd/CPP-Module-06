@@ -13,7 +13,7 @@ Base::~Base() {
 }
 
 Base *Base::generate() {
-    std::srand(std::time(0));
+    srand(time(0));
     int randomValue = std::rand() % 3;
 
     switch (randomValue) {
@@ -24,13 +24,13 @@ Base *Base::generate() {
         case 2:
             return new C();
         default:
-            return nullptr;
+            return NULL;
     }
 }
 
 void Base::identify(Base *p) {
     try {
-        if (p == nullptr)
+        if (p == NULL)
             throw std::bad_cast();
         if (dynamic_cast<A *>(p)) {
             std::cout << "this is an A\n";
