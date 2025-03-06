@@ -29,8 +29,8 @@ std::string ScalarConverter::getToConvert() {
 bool ScalarConverter::isFloat(std::string toIdentify) {
     bool has_decimal_point = false;
 
-    if (toIdentify.back() == 'f') {
-        toIdentify.pop_back();
+    if (toIdentify[toIdentify.length() - 1] == 'f') {
+        toIdentify.erase(toIdentify.length() - 1);
     } else {
         return false;
     }
@@ -98,7 +98,12 @@ void ScalarConverter::intConvert(std::string toConvert) {
 
 void ScalarConverter::floatConvert(std::string toConvert) {
     try {
-        float floatValue = std::stof(toConvert);
+        std::istringstream iss(toConvert);
+        float floatValue;
+        iss >> floatValue;
+        if (iss.fail()) {
+            throw std::invalid_argument("Invalid argument");
+        }
         if (floatValue < 32 || floatValue > 126) {
             std::cout << "char: Non displayable" << std::endl;
         } else {

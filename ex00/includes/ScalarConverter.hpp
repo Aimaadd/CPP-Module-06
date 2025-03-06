@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cctype>
 #include <iomanip>
+#include <sstream>
 
 class ScalarConverter {
     private:
