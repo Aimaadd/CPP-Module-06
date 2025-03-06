@@ -2,6 +2,6 @@
 #include "../includes/A.hpp"
 
 int main() {
-    Base::identify(Base::generate());
 
+    Base::identify(Base::generate());
 }

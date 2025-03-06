@@ -29,14 +29,20 @@ Base *Base::generate() {
 }
 
 void Base::identify(Base *p) {
-    if ((dynamic_cast<A *>(p))) {
-        std::cout << "this is an A\n";
-    }
-    if ((dynamic_cast<B *>(p))) {
-        std::cout << "this is a B\n";
-    }
-    if ((dynamic_cast<C *>(p))) {
-        std::cout << "this is a C\n";
+    try {
+        if (p == nullptr)
+            throw std::bad_cast();
+        if (dynamic_cast<A *>(p)) {
+            std::cout << "this is an A\n";
+        } else if (dynamic_cast<B *>(p)) {
+            std::cout << "this is a B\n";
+        } else if (dynamic_cast<C *>(p)) {
+            std::cout << "this is a C\n";
+        } else {
+            std::cout << "Unknown type\n";
+        }
+    } catch (const std::bad_cast& e) {
+        std::cerr << "Bad cast: " << e.what() << std::endl;
     }
     delete p;
 }
