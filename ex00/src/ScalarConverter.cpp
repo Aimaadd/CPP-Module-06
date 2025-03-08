@@ -31,8 +31,6 @@ bool ScalarConverter::isFloat(std::string toIdentify) {
 
     if (toIdentify[toIdentify.length() - 1] == 'f') {
         toIdentify.erase(toIdentify.length() - 1);
-    } else {
-        return false;
     }
     for (int i = 0; toIdentify[i]; i++) {
         if (toIdentify[i] == '.') {
@@ -45,12 +43,7 @@ bool ScalarConverter::isFloat(std::string toIdentify) {
             return false;
         }
     }
-    if (has_decimal_point) {
-        return true;
-    }
-    else {
-        return false;
-    }
+    return has_decimal_point;
 }
 
 bool ScalarConverter::isNum(std::string toIdentify) {
@@ -69,11 +62,55 @@ bool ScalarConverter::isChar(std::string toIdentify) {
     return true;
 }
 
+bool ScalarConverter::isDouble(std::string toIdentify) {
+    bool has_decimal_point = false;
+
+    if (toIdentify[toIdentify.length() - 1] == 'f') {
+        return false;
+    }
+
+    for (int i = 0; toIdentify[i]; i++) {
+        if (toIdentify[i] == '.') {
+            if (has_decimal_point) {
+                return false;
+            }
+            has_decimal_point = true;
+        } else if (!std::isdigit(toIdentify[i]) && !(i == 0 && toIdentify[i] == '-')) {
+            return false;
+        }
+    }
+    return has_decimal_point;
+}
+
 void ScalarConverter::displayChar(char toDisplay) {
     if (std::isprint(toDisplay)) {
         std::cout << "char: " << toDisplay << std::endl;
     } else {
         std::cout << "char: Non displayable" << std::endl;
+    }
+}
+
+void ScalarConverter::doubleConvert(std::string toConvert) {
+    try {
+        std::istringstream iss(toConvert);
+        double doubleValue;
+        iss >> doubleValue;
+        if (iss.fail()) {
+            throw std::invalid_argument("Invalid argument");
+        }
+        if (doubleValue < 32 || doubleValue > 126) {
+            std::cout << "char: Non displayable" << std::endl;
+        } else {
+            std::cout << "char: " << static_cast<char>(doubleValue) << std::endl;
+        }
+        std::cout << "int: " << static_cast<int>(doubleValue) << std::endl;
+        std::cout << std::fixed << std::setprecision(1);
+        std::cout << "float: " << static_cast<float>(doubleValue) << "f" << std::endl;
+        std::cout << "double: " << doubleValue << std::endl;
+    } catch (const std::invalid_argument& e) {
+        std::cerr << "Invalid argument: " << e.what() << std::endl;
+    } catch (const std::out_of_range& e) {
+        std::cerr << "Out of range: " << e.what() << std::endl;
     }
 }
 
@@ -83,7 +120,6 @@ void ScalarConverter::intConvert(std::string toConvert) {
         std::stringstream test;
         test << toConvert;
         test >> intValue;
-        std::cout << "test "<< intValue << std::endl;
         if (intValue < 32 || intValue > 126) {
             std::cout << "char: Non displayable" << std::endl;
         } else {
@@ -102,7 +138,13 @@ void ScalarConverter::intConvert(std::string toConvert) {
 
 void ScalarConverter::floatConvert(std::string toConvert) {
     try {
-        std::istringstream iss(toConvert);
+        // Remove the 'f' suffix if present
+        std::string processedStr = toConvert;
+        if (toConvert[toConvert.length() - 1] == 'f') {
+            processedStr = toConvert.substr(0, toConvert.length() - 1);
+        }
+
+        std::istringstream iss(processedStr);
         float floatValue;
         iss >> floatValue;
         if (iss.fail()) {
@@ -133,30 +175,35 @@ void ScalarConverter::charConvert(std::string toConvert) {
         std::cout << "float: " << static_cast<int>(charValue)  << ".0f" << std::endl;
         std::cout << "double: " << static_cast<double>(charValue) << std::endl;
     } catch (const std::invalid_argument& e) {
-        std::cerr << "Invalud argument: " << e.what() << std::endl;
+        std::cerr << "Invalid argument: " << e.what() << std::endl;
     } catch (const std::out_of_range &e) {
         std::cerr << "Out of range: " << e.what() << std::endl;
     }
 }
 
 void ScalarConverter::convert(std::string toConvert) {
-    if (isNum(toConvert) == true) {
-        intConvert(toConvert);
-        return ;
-    }
-    if (isFloat(toConvert) == true) {
-        floatConvert(toConvert);
-        return ;
-    }
-    if (isChar(toConvert) == true) {
-        charConvert(toConvert);
-        return ;
-    }
     if (toConvert == "nan" || toConvert == "-inf" || toConvert == "+inf" || toConvert == "inf") {
         std::cout << "char: impossible" << std::endl;
         std::cout << "int: impossible" << std::endl;
         std::cout << "float: " << toConvert << "f" << std::endl;
         std::cout << "double: " << toConvert << std::endl;
-        return ;
+        return;
     }
+    if (isFloat(toConvert)) {
+        floatConvert(toConvert);
+        return;
+    }
+    if (isNum(toConvert)) {
+        intConvert(toConvert);
+        return;
+    }
+    if (isChar(toConvert)) {
+        charConvert(toConvert);
+        return;
+    }
+    if (isDouble(toConvert)) {
+        doubleConvert(toConvert);
+        return;
+    }
+    std::cout << "Error: could not determine type of input" << std::endl;
 }

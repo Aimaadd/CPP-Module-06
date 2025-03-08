@@ -1,3 +1,6 @@
+#ifndef SCALARCONVERTER_HPP
+#define SCALARCONVERTER_HPP
+
 #include <iostream>
 #include <cctype>
 #include <iomanip>
@@ -18,8 +21,12 @@ class ScalarConverter {
         static bool isNum(std::string toIdentify);
         static bool isFloat(std::string toIdentify);
         static bool isChar(std::string toIdentify);
+        static bool isDouble(std::string toIdentify);
+        static void doubleConvert(std::string toConvert);
         static void intConvert(std::string toConvert);
         static void floatConvert(std::string toConvert);
         static void charConvert(std::string toConvert);
         static void displayChar(char c);
 };
+
+#endif
